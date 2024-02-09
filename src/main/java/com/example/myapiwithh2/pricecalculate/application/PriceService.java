@@ -16,11 +16,11 @@ public class PriceService {
 
     @Autowired
     private PriceRepository priceRepository;
-    
+
     public Optional<Price> findPrice(Price price) {
 
         List<Price> prices = priceRepository.findAllByProductIdAndBrandIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                price.getProductId(), price.getBrandId(),price.getStartDate(),price.getEndDate());
+                price.getProductId(), price.getBrandId(), price.getStartDate(), price.getEndDate());
 
         Optional<Price> optionalPrice = prices.stream()
                 .filter(p -> p.getPriority() == Constants.PRIORITY)

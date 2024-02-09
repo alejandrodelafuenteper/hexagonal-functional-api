@@ -23,7 +23,8 @@ public class Price {
 
     }
 
-    public Price(Integer id, Integer brandId, Date startDate, Date endDate, Integer priceList, Integer productId, Integer priority, BigDecimal price, String currency, Date lastUpdate, String lastUpdateBy) {
+    public Price(Integer id, Integer brandId, Date startDate, Date endDate, Integer priceList, Integer productId,
+                 Integer priority, BigDecimal price, String currency, Date lastUpdate, String lastUpdateBy) {
         this.id = id;
         this.brandId = brandId;
         this.startDate = startDate;
@@ -36,7 +37,6 @@ public class Price {
         this.lastUpdate = lastUpdate;
         this.lastUpdateBy = lastUpdateBy;
     }
-
 
 
     public Integer getId() {

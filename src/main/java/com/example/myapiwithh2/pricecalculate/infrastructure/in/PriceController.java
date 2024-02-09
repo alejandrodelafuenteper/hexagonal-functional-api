@@ -31,9 +31,9 @@ public class PriceController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<PriceResponse> getPrice( @RequestParam Integer productId,
-                                                   @RequestParam Integer brandId,
-                                                   @RequestParam LocalDateTime appDate){
+    public ResponseEntity<PriceResponse> getPrice(@RequestParam Integer productId,
+                                                  @RequestParam Integer brandId,
+                                                  @RequestParam LocalDateTime appDate) {
 
         PriceDTO priceDTO = new PriceDTO(productId, brandId, appDate);
 
@@ -48,14 +48,14 @@ public class PriceController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String,String> handleValidationException(MethodArgumentNotValidException ex){
+    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
 
-        Map<String,String> errors = new HashMap<>();
+        Map<String, String> errors = new HashMap<>();
 
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName,errorMessage);
+            errors.put(fieldName, errorMessage);
         });
 
         return errors;
