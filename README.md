@@ -55,12 +55,12 @@ GET /prices/
 ### Response
 
 {  
-	"productId": "product_id",  
-	"brandId": "brand_id",  
-	"priceList": "price_list_id",  
-	"startDate": "start_date",  
-	"endDate": "end_date",  
-	"price": "price + currency"  
+    "productId": "product_id",  
+    "brandId": "brand_id",  
+    "priceList": "price_list_id",  
+    "startDate": "start_date",  
+    "endDate": "end_date",  
+    "price": "price + currency"  
 }
 
 ### Sample Request:
