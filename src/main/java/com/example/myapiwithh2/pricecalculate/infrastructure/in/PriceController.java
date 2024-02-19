@@ -35,19 +35,9 @@ public class PriceController {
         PriceDTO priceDTO = new PriceDTO(productId, brandId, appDate);
         try {
             Optional<Price> price = priceService.findPrice(toDomainMapper.map(priceDTO));
-            PriceResponse priceResponse = toResponseMapper.map(price.get());
-            return ResponseEntity.ok(priceResponse);
-        } catch (NotPriceFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.ok(toResponseMapper.map(price.get()));
+        } catch (NotPriceFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse("ERROR: NotPriceFoundException", ex.getMessage()), HttpStatus.NOT_FOUND);
         }
-
-
-        /*
-        return price.map(p ->
-                ResponseEntity.ok(toResponseMapper.map(p))
-        ).orElseGet(() ->
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún precio para los parámetros proporcionados.")
-        );
-        */
     }
 }
