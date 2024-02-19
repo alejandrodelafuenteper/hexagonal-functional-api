@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class PriceEntityCalculateApplicationTests {
+class PriceControllerIntegrationTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,41 +33,51 @@ class PriceEntityCalculateApplicationTests {
     @Test
     public void test1() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 14, 10, 0, 0);
-        PriceResponse priceResponse = test("/prices/",35455, 1, localDateTime);
+        MvcResult mvcResult = test("/prices/",35455, 1, localDateTime);
 
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        PriceResponse priceResponse = objectMapper.readValue(responseBody, PriceResponse.class);
+
+        assertNotNull(mvcResult);
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
         assertNotNull(priceResponse);
         assertEquals("35.50 EUR", priceResponse.price());
 
     }
 
-    private PriceResponse test(String url, Integer productId, Integer brandId, LocalDateTime appDate) throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(url)
+    private MvcResult test(String url, Integer productId, Integer brandId, LocalDateTime appDate) throws Exception {
+        return mockMvc.perform(get(url)
                         .param("productId", String.valueOf(productId))
                         .param("brandId", String.valueOf(brandId))
                         .param("appDate", appDate.toString()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
-
-
-        String responseBody = mvcResult.getResponse().getContentAsString();
-        return objectMapper.readValue(responseBody, PriceResponse.class);
     }
 
     @Test
     public void test2() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 14, 16, 0, 0);
-        PriceResponse priceResponse = test("/prices/",35455, 1, localDateTime);
+        MvcResult mvcResult = test("/prices/",35455, 1, localDateTime);
 
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        PriceResponse priceResponse = objectMapper.readValue(responseBody, PriceResponse.class);
+
+        assertNotNull(mvcResult);
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
         assertNotNull(priceResponse);
-        assertEquals( "25.45 EUR", priceResponse.price());
+        assertEquals("25.45 EUR", priceResponse.price());
     }
 
     @Test
     public void test3() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 14, 21, 0, 0);
-        PriceResponse priceResponse = test("/prices/",35455, 1, localDateTime);
+        MvcResult mvcResult = test("/prices/",35455, 1, localDateTime);
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        PriceResponse priceResponse = objectMapper.readValue(responseBody, PriceResponse.class);
 
+        assertNotNull(mvcResult);
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
         assertNotNull(priceResponse);
         assertEquals("35.50 EUR", priceResponse.price());
     }
@@ -74,8 +85,13 @@ class PriceEntityCalculateApplicationTests {
     @Test
     public void test4() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 15, 10, 0, 0);
-        PriceResponse priceResponse = test("/prices/",35455, 1, localDateTime);
+        MvcResult mvcResult = test("/prices/",35455, 1, localDateTime);
 
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        PriceResponse priceResponse = objectMapper.readValue(responseBody, PriceResponse.class);
+
+        assertNotNull(mvcResult);
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
         assertNotNull(priceResponse);
         assertEquals("30.50 EUR", priceResponse.price());
     }
@@ -83,8 +99,13 @@ class PriceEntityCalculateApplicationTests {
     @Test
     public void test5() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 16, 21, 0, 0);
-        PriceResponse priceResponse = test("/prices/",35455, 1, localDateTime);
+        MvcResult mvcResult = test("/prices/",35455, 1, localDateTime);
 
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        PriceResponse priceResponse = objectMapper.readValue(responseBody, PriceResponse.class);
+
+        assertNotNull(mvcResult);
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
         assertNotNull(priceResponse);
         assertEquals("38.95 EUR", priceResponse.price());
     }
@@ -92,17 +113,19 @@ class PriceEntityCalculateApplicationTests {
     @Test
     public void testNotFoundPrice() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 16, 21, 0, 0);
-        PriceResponse priceResponse = test("/prices/",35456, 1, localDateTime);
+        MvcResult mvcResult = test("/prices/",35456, 1, localDateTime);
 
-        assertNotNull(priceResponse);
-        assertEquals(HttpStatusCode.valueOf(404), priceResponse.);
+        assertNotNull(mvcResult);
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
+
     }
     @Test
     public void testBadUrl() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 16, 21, 0, 0);
-        PriceResponse priceResponse = test("/prices",35455, 1, localDateTime);
+        MvcResult mvcResult = test("/prices2/",35455, 1, localDateTime);
 
-        assertNotNull(priceResponse);
-        assertEquals(HttpStatusCode.valueOf(404), priceResponse.);
+        assertNotNull(mvcResult);
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
+
     }
 }
