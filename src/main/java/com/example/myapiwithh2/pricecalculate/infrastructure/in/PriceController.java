@@ -3,7 +3,6 @@ package com.example.myapiwithh2.pricecalculate.infrastructure.in;
 import com.example.myapiwithh2.pricecalculate.application.PriceService;
 import com.example.myapiwithh2.pricecalculate.domain.NotPriceFoundException;
 import com.example.myapiwithh2.pricecalculate.domain.Price;
-import com.example.myapiwithh2.pricecalculate.infrastructure.out.PriceResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

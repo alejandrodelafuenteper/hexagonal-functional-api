@@ -2,7 +2,6 @@ package com.example.myapiwithh2.pricecalculate.domain;
 
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Price {

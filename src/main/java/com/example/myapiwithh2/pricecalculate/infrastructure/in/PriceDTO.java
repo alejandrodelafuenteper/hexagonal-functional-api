@@ -4,7 +4,6 @@ package com.example.myapiwithh2.pricecalculate.infrastructure.in;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 
