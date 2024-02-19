@@ -36,7 +36,7 @@ cd hexagonal-functional-api
 ./mvnw clean package
 
 4. Run the application:
-java -jar target/hexagonal-functional-api.jar
+mvn spring-boot:run
 
 ## Usage
 
@@ -48,19 +48,34 @@ GET /prices/
 
 ### Request Parameters
 
-- `productId`: Product identifier (Integer)
-- `brandId`: Brand identifier (Integer)
-- `appDate`: Application date (LocalDateTime)
+- 'productId': Product identifier (Integer)
+- 'brandId': Brand identifier (Integer)
+- 'appDate': Application date (LocalDateTime)
 
 ### Response
 
-{
-"productId": "product_id",
-"brandId": "brand_id",
-"priceList": "price_list_id",
-"startDate": "start_date",
-"endDate": "end_date",
-"price": "price + currency"
+{  
+    "productId": "product_id",  
+    "brandId": "brand_id",  
+    "priceList": "price_list_id",  
+    "startDate": "start_date",  
+    "endDate": "end_date",  
+    "price": "price + currency"  
+}
+
+### Sample Request:
+
+http://localhost:8080/prices/?productId=35455&brandId=1&appDate=2020-06-15T10:00:00
+
+### Successful Response:
+
+{  
+    "productId": 35455,  
+    "brandId": 1,  
+    "priceList": 3,  
+    "startDate": "2020-06-14T22:00:00.000+00:00",  
+    "endDate": "2020-06-15T09:00:00.000+00:00",  
+    "price": "30.50 EUR"  
 }
 
 ## Integration Tests
