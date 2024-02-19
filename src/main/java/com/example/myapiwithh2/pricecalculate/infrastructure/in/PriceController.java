@@ -1,18 +1,15 @@
 package com.example.myapiwithh2.pricecalculate.infrastructure.in;
 
 import com.example.myapiwithh2.pricecalculate.application.PriceService;
+import com.example.myapiwithh2.pricecalculate.domain.NotPriceFoundException;
 import com.example.myapiwithh2.pricecalculate.domain.Price;
 import com.example.myapiwithh2.pricecalculate.infrastructure.out.PriceResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,34 +28,26 @@ public class PriceController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<PriceResponse> getPrice(@RequestParam Integer productId,
+    public ResponseEntity<?> getPrice(@RequestParam Integer productId,
                                                   @RequestParam Integer brandId,
                                                   @RequestParam LocalDateTime appDate) {
 
         PriceDTO priceDTO = new PriceDTO(productId, brandId, appDate);
+        try {
+            Optional<Price> price = priceService.findPrice(toDomainMapper.map(priceDTO));
+            PriceResponse priceResponse = toResponseMapper.map(price.get());
+            return ResponseEntity.ok(priceResponse);
+        } catch (NotPriceFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
 
-        Optional<Price> price = priceService.findPrice(toDomainMapper.map(priceDTO));
 
-        return price
-                .map(toResponseMapper::map)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-
+        /*
+        return price.map(p ->
+                ResponseEntity.ok(toResponseMapper.map(p))
+        ).orElseGet(() ->
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún precio para los parámetros proporcionados.")
+        );
+        */
     }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
-
-        Map<String, String> errors = new HashMap<>();
-
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-
-        return errors;
-    }
-
 }
