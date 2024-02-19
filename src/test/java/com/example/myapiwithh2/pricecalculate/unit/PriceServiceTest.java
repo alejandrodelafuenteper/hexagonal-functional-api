@@ -5,15 +5,11 @@ import com.example.myapiwithh2.pricecalculate.application.PriceService;
 import com.example.myapiwithh2.pricecalculate.domain.NotPriceFoundException;
 import com.example.myapiwithh2.pricecalculate.domain.Price;
 import com.example.myapiwithh2.pricecalculate.domain.PriceRepository;
-import com.example.myapiwithh2.pricecalculate.infrastructure.out.PriceRepositoryAdapter;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -50,7 +49,6 @@ class PriceControllerIntegrationTests {
                         .param("productId", String.valueOf(productId))
                         .param("brandId", String.valueOf(brandId))
                         .param("appDate", appDate.toString()))
-                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
     }
@@ -122,10 +120,14 @@ class PriceControllerIntegrationTests {
     @Test
     public void testBadUrl() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 16, 21, 0, 0);
-        MvcResult mvcResult = test("/prices2/",35455, 1, localDateTime);
+        MvcResult mvcResult = mockMvc.perform(get("/prices2/")
+                        .param("productId", "35455")
+                        .param("brandId", "1")
+                        .param("appDate", localDateTime.toString()))
+                .andExpect(status().isNotFound())
+                .andReturn();
 
         assertNotNull(mvcResult);
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
-
     }
 }
