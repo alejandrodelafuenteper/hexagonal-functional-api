@@ -29,14 +29,10 @@ public class PriceController {
     @GetMapping("/")
     public ResponseEntity<?> getPrice(@RequestParam Integer productId,
                                                   @RequestParam Integer brandId,
-                                                  @RequestParam LocalDateTime appDate) {
+                                                  @RequestParam LocalDateTime appDate) throws NotPriceFoundException {
 
         PriceDTO priceDTO = new PriceDTO(productId, brandId, appDate);
-        try {
             Optional<Price> price = priceService.findPrice(toDomainMapper.map(priceDTO));
             return ResponseEntity.ok(toResponseMapper.map(price.get()));
-        } catch (NotPriceFoundException ex) {
-            return new ResponseEntity<>(new ErrorResponse("ERROR: NotPriceFoundException", ex.getMessage()), HttpStatus.NOT_FOUND);
-        }
     }
 }
