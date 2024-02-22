@@ -35,6 +35,24 @@ public class PriceEntity {
     @Column(name="last_update_by")
     private String lastUpdateBy;
 
+    public PriceEntity() {
+    }
+
+    public PriceEntity(Integer id, Integer brandId, Date startDate, Date endDate, Integer priceList, Integer productId,
+                       Integer priority, BigDecimal price, String currency, Date lastUpdate, String lastUpdateBy) {
+        this.id = id;
+        this.brandId = brandId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.priceList = priceList;
+        this.productId = productId;
+        this.priority = priority;
+        this.price = price;
+        this.currency = currency;
+        this.lastUpdate = lastUpdate;
+        this.lastUpdateBy = lastUpdateBy;
+    }
+
     public Integer getId() {
         return id;
     }

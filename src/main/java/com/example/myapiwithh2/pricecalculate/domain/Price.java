@@ -3,6 +3,7 @@ package com.example.myapiwithh2.pricecalculate.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 public class Price {
 
@@ -124,5 +125,22 @@ public class Price {
 
     public void setLastUpdateBy(String lastUpdateBy) {
         this.lastUpdateBy = lastUpdateBy;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Price price1 = (Price) o;
+        return Objects.equals(id, price1.id) && Objects.equals(brandId, price1.brandId) && Objects.equals(startDate, price1.startDate) && Objects.equals(endDate, price1.endDate) && Objects.equals(priceList, price1.priceList) && Objects.equals(productId, price1.productId) && Objects.equals(priority, price1.priority) && Objects.equals(price, price1.price) && Objects.equals(currency, price1.currency) && Objects.equals(lastUpdate, price1.lastUpdate) && Objects.equals(lastUpdateBy, price1.lastUpdateBy);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, brandId, startDate, endDate, priceList, productId, priority, price, currency, lastUpdate, lastUpdateBy);
     }
 }

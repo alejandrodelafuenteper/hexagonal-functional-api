@@ -14,18 +14,19 @@ import java.util.Optional;
 @Service
 public class PriceService {
 
-    @Autowired
-    private PriceRepository priceRepository;
+    private final PriceRepository priceRepository;
 
-    public Optional<Price> findPrice(Price price) throws NotPriceFoundException {
+    public PriceService(PriceRepository priceRepository) {
+        this.priceRepository = priceRepository;
+    }
+
+    public Price findPrice(Price price) throws NotPriceFoundException {
 
         List<Price> prices = priceRepository.findAllByProductIdAndBrandIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
                 price.getProductId(), price.getBrandId(), price.getStartDate(), price.getEndDate());
 
-        if(prices.isEmpty()){
-            throw new NotPriceFoundException("No price was found for the provided parameters.");
-        }
-        return prices.stream().max(Comparator.comparingInt(Price::getPriority));
-
+        return prices.stream()
+                .max(Comparator.comparingInt(Price::getPriority))
+                .orElseThrow(() -> new NotPriceFoundException("No price was found for the provided parameters."));
     }
 }
