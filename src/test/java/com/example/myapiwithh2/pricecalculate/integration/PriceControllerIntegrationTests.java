@@ -118,11 +118,11 @@ class PriceControllerIntegrationTests {
 
     }
     @Test
-    public void testBadUrl() throws Exception {
+    public void testBrandIdDoesNotExist() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 16, 21, 0, 0);
-        MvcResult mvcResult = mockMvc.perform(get("/prices2/")
+        MvcResult mvcResult = mockMvc.perform(get("/prices/")
                         .param("productId", "35455")
-                        .param("brandId", "1")
+                        .param("brandId", "2")
                         .param("appDate", localDateTime.toString()))
                 .andExpect(status().isNotFound())
                 .andReturn();
