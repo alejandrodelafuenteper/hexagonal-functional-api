@@ -6,10 +6,10 @@ public class PriceDTOToDomainMapper {
 
     public Price map(PriceDTO priceDTO) {
         Price price = new Price();
-        price.setProductId(priceDTO.getProductId());
-        price.setBrandId(priceDTO.getBrandId());
-        price.setStartDate(java.sql.Timestamp.valueOf(priceDTO.getAppDate()));
-        price.setEndDate(java.sql.Timestamp.valueOf(priceDTO.getAppDate()));
+        price.setProductId(priceDTO.productId());
+        price.setBrandId(priceDTO.brandId());
+        price.setStartDate(java.sql.Timestamp.valueOf(priceDTO.appDate()));
+        price.setEndDate(java.sql.Timestamp.valueOf(priceDTO.appDate()));
         return price;
     }
 }

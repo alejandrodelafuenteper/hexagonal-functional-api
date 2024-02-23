@@ -5,10 +5,12 @@ import com.example.myapiwithh2.pricecalculate.application.PriceService;
 import com.example.myapiwithh2.pricecalculate.domain.NotPriceFoundException;
 import com.example.myapiwithh2.pricecalculate.domain.Price;
 import com.example.myapiwithh2.pricecalculate.domain.PriceRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -23,13 +25,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 public class PriceServiceTest {
-    @InjectMocks
+
     private PriceService priceService;
     @Mock
     private PriceRepository priceRepository;
 
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        priceService = new PriceService(priceRepository);
+    }
 
     @Test
     public void testFindPrice_PriceFound() throws NotPriceFoundException {
@@ -40,14 +46,15 @@ public class PriceServiceTest {
         List<Price> prices = new ArrayList<>();
         prices.add(price);
 
-        when(priceRepository.findAllByProductIdAndBrandIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(anyInt(), anyInt(), any(), any())).thenReturn(prices);
+        when(priceRepository.findAllByProductIdAndBrandIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(anyInt(), anyInt(), any(), any()))
+                .thenReturn(prices);
 
         // Act
-        Optional<Price> result = priceService.findPrice(price);
+        Price result = priceService.findPrice(price);
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(price, result.get());
+        assertNotNull(result);
+        assertEquals(price, result);
     }
 
     @Test
