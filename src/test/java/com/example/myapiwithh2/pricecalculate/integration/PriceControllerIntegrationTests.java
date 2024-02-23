@@ -2,6 +2,7 @@ package com.example.myapiwithh2.pricecalculate.integration;
 
 import com.example.myapiwithh2.pricecalculate.infrastructure.out.PriceResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,11 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -129,5 +130,33 @@ class PriceControllerIntegrationTests {
 
         assertNotNull(mvcResult);
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    public void testProductIdNullValidation() throws Exception {
+        LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 16, 21, 0, 0);
+
+        MvcResult mvcResult = mockMvc.perform(get("/prices/")
+                        .param("brandId", "1")
+                        .param("appDate", localDateTime.toString()))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        assertNotNull(mvcResult);
+        assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    public void testProductIdExceedsFiveDigitsValidation() throws Exception {
+        LocalDateTime localDateTime = LocalDateTime.of(2020, 6, 16, 21, 0, 0);
+        MvcResult mvcResult = mockMvc.perform(get("/prices/")
+                        .param("productId", "123456")
+                        .param("brandId", "2")
+                        .param("appDate", localDateTime.toString()))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        assertNotNull(mvcResult);
+        assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus());
     }
 }
