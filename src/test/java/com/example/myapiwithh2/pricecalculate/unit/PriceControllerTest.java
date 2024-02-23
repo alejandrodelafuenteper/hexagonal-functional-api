@@ -1,50 +1,50 @@
 package com.example.myapiwithh2.pricecalculate.unit;
 
 import com.example.myapiwithh2.pricecalculate.application.PriceService;
-import com.example.myapiwithh2.pricecalculate.domain.NotPriceFoundException;
 import com.example.myapiwithh2.pricecalculate.infrastructure.in.PriceController;
-import org.junit.jupiter.api.BeforeEach;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+
 import java.time.LocalDateTime;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@ExtendWith(MockitoExtension.class)
 public class PriceControllerTest {
 
+    @Mock
+    private PriceService priceService;
+
+    @InjectMocks
     private PriceController priceController;
 
-    @BeforeEach
-    void setUp() {
-        PriceService priceServiceMock = mock(PriceService.class);
-        priceController = new PriceController(priceServiceMock);
+    @Test
+    void getPrice_ProductIdNull_ThrowsMissingServletRequestParameterException() {
+        // Arrange
+        Integer productId = null;
+        Integer brandId = 1;
+        LocalDateTime appDate = LocalDateTime.now();
+
+        // Act & Assert
+        assertThrows(MissingServletRequestParameterException.class,
+                () -> priceController.getPrice(productId, brandId, appDate));
     }
 
     @Test
-    void testGetPrice_NullProductId() throws NotPriceFoundException {
+    void getPrice_ProductIdExceedsFiveDigits_ThrowsConstraintViolationException() {
         // Arrange
+        Integer productId = 123456;
+        Integer brandId = 1;
         LocalDateTime appDate = LocalDateTime.now();
-        ResponseEntity<?> expectedResponse = new ResponseEntity<>("Product ID cannot be null", HttpStatus.BAD_REQUEST);
 
-        // Act
-        ResponseEntity<?> responseEntity = priceController.getPrice(null, 1, appDate);
-
-        // Assert
-        assertEquals(expectedResponse, responseEntity);
-    }
-
-    @Test
-    void testGetPrice_BrandIdExceedsLimit() throws NotPriceFoundException {
-        // Arrange
-        LocalDateTime appDate = LocalDateTime.now();
-        ResponseEntity<?> expectedResponse = new ResponseEntity<>("Brand ID cannot have more than 5 digits", HttpStatus.BAD_REQUEST);
-
-        // Act
-        ResponseEntity<?> responseEntity = priceController.getPrice(123456, 1, appDate);
-
-        // Assert
-        assertEquals(expectedResponse, responseEntity);
+        // Act & Assert
+        assertThrows(ConstraintViolationException.class,
+                () -> priceController.getPrice(productId, brandId, appDate));
     }
 }
